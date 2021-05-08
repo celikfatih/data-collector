@@ -1,0 +1,10 @@
+spring:
+  main:
+    banner-mode: off
+  data:
+    cassandra:
+      keyspace-name: letterboxd
+      contact-points: 127.0.0.1
+      port: 9042
+      local-datacenter: fatiscenter
+      schema-action: create_if_not_exists
