@@ -8,3 +8,11 @@ spring:
       port: 9042
       local-datacenter: fatiscenter
       schema-action: create_if_not_exists
+      compression: lz4
+twitter:
+  consumer:
+    key:
+    secret:
+  access:
+    token:
+    secret:
