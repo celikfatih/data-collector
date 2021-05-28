@@ -11,7 +11,7 @@ public class Constants {
     }
 
     public static final String LETTERBOX_D_BASE_URL = "https://letterboxd.com/";
-    public static final String CSS_QUERY = "a[href*=twitter]";
+    public static final String TWITTER_URL_QUERY = "a[href*=twitter]";
     public static final String HREF = "href";
     public static final String LETTERBOX_D_POPULAR_MEMBERS_BASE_URL = LETTERBOX_D_BASE_URL + "members/popular/this/month/";
     public static final String PAGE = "page/";
@@ -20,4 +20,7 @@ public class Constants {
     public static final String TABLE_SELECT_QUERY = "table > tbody";
     public static final int TWITTER_MAX_PAGE_SIZE = 2;
     public static final int TWITTER_PER_PAGE_TWEET_COUNT = 5;
+    public static final String LETTERBOX_D_USER_FILM_RATINGS_URL = "/films/ratings/";
+    public static final String RATED_FILM_NAME_QUERY = "ul.poster-list > li > div > img";
+    public static final String RATED_FILM_RATING_QUERY = "ul.poster-list > li > p";
 }

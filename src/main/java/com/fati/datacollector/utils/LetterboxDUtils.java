@@ -24,7 +24,7 @@ public class LetterboxDUtils {
 
     public static IntFunction<String> getUsername(Element table) {
         return i -> table.select(TABLE_INDEX_QUERY.apply(String.valueOf(i))).first()
-                .select(TABLE_USERNAME_QUERY).first().attr(HREF);
+                .select(TABLE_USERNAME_QUERY).first().attr(HREF).replaceAll("/", "");
     }
 
     public static String popularMembersUrlSetPageNumber(int pageNumber) {

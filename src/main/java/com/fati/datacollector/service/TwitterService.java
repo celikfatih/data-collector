@@ -3,6 +3,7 @@ package com.fati.datacollector.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fati.datacollector.models.TwitterUser;
+import com.fati.datacollector.projection.OnlyTwitterUsername;
 import com.fati.datacollector.repository.TwitterUserRepository;
 import com.fati.datacollector.utils.TwitterUtils;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,14 @@ public class TwitterService {
     private final Twitter twitter;
     private final ObjectMapper objectMapper;
     private final TwitterUserRepository twitterUserRepository;
+    private final LetterboxDService letterboxDService;
+
+    public void extractAndSaveTweets() {
+        List<OnlyTwitterUsername> usernames = letterboxDService.getAllTwitterUsernames();
+        usernames.stream()
+                .map(OnlyTwitterUsername::getTwitterUsername)
+                .forEach(this::getTweetsForUser);
+    }
 
     public void getTweetsForUser(String username) {
         List<TwitterUser> tweets = IntStream.range(1, TWITTER_MAX_PAGE_SIZE)
