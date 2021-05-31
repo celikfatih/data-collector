@@ -40,7 +40,7 @@ public class LetterboxDService {
 
     private final LetterboxDUserRepository letterboxDUserRepository;
     private final LetterboxDRatingRepository letterboxDRatingRepository;
-
+    private final TwitterService twitterService;
 
     public List<OnlyTwitterUsername> getAllTwitterUsernames() {
         return letterboxDUserRepository.findAllBy();
@@ -113,7 +113,7 @@ public class LetterboxDService {
                 return empty;
             }
             String twitterUsername = elements.first().getElementsByAttribute(HREF).text();
-            if (letterboxDUserRepository.existsLetterboxDUserByUsername(username)) {
+            if (letterboxDUserRepository.existsLetterboxDUserByUsername(username) && !twitterService.isExistUsername(twitterUsername)) {
                 return empty;
             }
             return Optional.of(LetterboxDUser.builder().username(username).twitterUsername(twitterUsername).build());

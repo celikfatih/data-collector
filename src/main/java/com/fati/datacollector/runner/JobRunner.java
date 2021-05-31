@@ -20,15 +20,17 @@ public class JobRunner {
     private final LetterboxDService letterboxDService;
     private final TwitterService twitterService;
 
-    @Scheduled(cron = "0 59 23 * * *")
+    @Scheduled(cron = "0 53 00 * * *")
     public void letterboxDJobRunner() {
-        log.info("Started letterboxDJobRunner ...");
+        log.info("Started letterboxDJobRunner...");
         letterboxDService.extractAndSaveLetterboxDData(10);
+        log.info("Ended letterboxDJobRunner...");
     }
 
-    @Scheduled(cron = "0 15 00 * * *")
+    @Scheduled(cron = "0 59 00 * * *")
     public void twitterJobRunner() {
         log.info("Started twitterJobRunner ...");
         twitterService.extractAndSaveTweets();
+        log.info("Ended twitterJobRunner...");
     }
 }

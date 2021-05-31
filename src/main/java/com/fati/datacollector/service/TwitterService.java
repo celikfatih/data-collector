@@ -61,6 +61,15 @@ public class TwitterService {
         saveTweetsForUser(tweets);
     }
 
+    public boolean isExistUsername(String username) {
+        try {
+            twitter.lookupUsers(username);
+            return true;
+        } catch (TwitterException e) {
+            return false;
+        }
+    }
+
     private Function<Status, Optional<TwitterUser>> convertStatus() {
         return s -> {
             try {
