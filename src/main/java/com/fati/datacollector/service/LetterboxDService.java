@@ -12,6 +12,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +41,12 @@ public class LetterboxDService {
 
     private final LetterboxDUserRepository letterboxDUserRepository;
     private final LetterboxDRatingRepository letterboxDRatingRepository;
-    private final TwitterService twitterService;
+    private TwitterService twitterService;
+
+    @Autowired
+    private void setTwitterService(TwitterService twitterService) {
+        this.twitterService = twitterService;
+    }
 
     public List<OnlyTwitterUsername> getAllTwitterUsernames() {
         return letterboxDUserRepository.findAllBy();
@@ -82,6 +88,7 @@ public class LetterboxDService {
 
     private IntFunction<List<String>> getUsersPerPage() {
         return i -> {
+            log.info("getUsersPerPage method invoking pageNumber: {}", i);
             if (i == 0) {
                 return getPopularMemberUsernamesThisMonth(LETTERBOX_D_POPULAR_MEMBERS_BASE_URL);
             } else {
@@ -113,7 +120,8 @@ public class LetterboxDService {
                 return empty;
             }
             String twitterUsername = elements.first().getElementsByAttribute(HREF).text();
-            if (letterboxDUserRepository.existsLetterboxDUserByUsername(username) && !twitterService.isExistUsername(twitterUsername)) {
+            if (letterboxDUserRepository.existsLetterboxDUserByUsername(username) ||
+                    !twitterService.isAccessibleTwitterProfile(twitterUsername)) {
                 return empty;
             }
             return Optional.of(LetterboxDUser.builder().username(username).twitterUsername(twitterUsername).build());

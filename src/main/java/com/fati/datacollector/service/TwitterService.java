@@ -14,6 +14,7 @@ import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import twitter4j.User;
 
 import java.util.Collection;
 import java.util.List;
@@ -61,10 +62,10 @@ public class TwitterService {
         saveTweetsForUser(tweets);
     }
 
-    public boolean isExistUsername(String username) {
+    public synchronized boolean isAccessibleTwitterProfile(String username) {
         try {
-            twitter.lookupUsers(username);
-            return true;
+            ResponseList<User> user = twitter.lookupUsers(username);
+            return !user.get(0).isProtected();
         } catch (TwitterException e) {
             return false;
         }
