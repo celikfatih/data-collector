@@ -1,6 +1,6 @@
 package com.fati.datacollector.repository;
 
-import com.fati.datacollector.models.LetterboxDUser;
+import com.fati.datacollector.model.LetterboxDUser;
 import com.fati.datacollector.projection.OnlyTwitterUsername;
 import org.springframework.data.cassandra.repository.CassandraRepository;
 

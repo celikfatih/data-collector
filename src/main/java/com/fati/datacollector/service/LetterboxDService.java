@@ -1,18 +1,20 @@
 package com.fati.datacollector.service;
 
-import com.fati.datacollector.models.LetterBoxDRating;
-import com.fati.datacollector.models.LetterboxDUser;
+import com.fati.datacollector.model.LetterBoxDRating;
+import com.fati.datacollector.model.LetterboxDUser;
 import com.fati.datacollector.projection.OnlyTwitterUsername;
 import com.fati.datacollector.repository.LetterboxDRatingRepository;
 import com.fati.datacollector.repository.LetterboxDUserRepository;
 import com.fati.datacollector.utils.LetterboxDUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,9 +22,9 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.function.IntFunction;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -78,8 +80,8 @@ public class LetterboxDService {
     private List<LetterboxDUser> getPopularMembersThisMonth(int pageSizeLimit) {
         return IntStream.rangeClosed(0, pageSizeLimit)
                 .mapToObj(getUsersPerPage())
-                .filter(Objects::nonNull)
-                .flatMap(Collection::stream)
+                .filter(CollectionUtils::isNotEmpty)
+                .flatMap(Collection::parallelStream)
                 .map(this::getLetterboxDUser)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -89,12 +91,7 @@ public class LetterboxDService {
     private IntFunction<List<String>> getUsersPerPage() {
         return i -> {
             log.info("getUsersPerPage method invoking pageNumber: {}", i);
-            if (i == 0) {
-                return getPopularMemberUsernamesThisMonth(LETTERBOX_D_POPULAR_MEMBERS_BASE_URL);
-            } else {
-                String url = LetterboxDUtils.popularMembersUrlSetPageNumber(i);
-                return getPopularMemberUsernamesThisMonth(url);
-            }
+            return getPopularMemberUsernamesThisMonth(LetterboxDUtils.popularMembersUrlSetPageNumber(i));
         };
     }
 
@@ -131,9 +128,18 @@ public class LetterboxDService {
         }
     }
 
-    public List<LetterBoxDRating> getLetterBoxDUserRatedFilms(String username) {
+    private List<LetterBoxDRating> getLetterBoxDUserRatedFilms(String username) {
+        return IntStream.rangeClosed(0, LETTERBOX_D_RATING_PAGE_SIZE)
+                .mapToObj(i -> Pair.of(username, i))
+                .map(getRatedFilmPerPage())
+                .filter(CollectionUtils::isNotEmpty)
+                .flatMap(Collection::parallelStream)
+                .collect(Collectors.toList());
+    }
+
+    private List<LetterBoxDRating> getLetterBoxDRatings(String url, String username) {
         try {
-            Document ratedFilmPage = Jsoup.connect(LETTERBOX_D_BASE_URL + username + LETTERBOX_D_USER_FILM_RATINGS_URL).get();
+            Document ratedFilmPage = Jsoup.connect(url).get();
             Elements names = ratedFilmPage.select(RATED_FILM_NAME_QUERY);
             Elements ratings = ratedFilmPage.select(RATED_FILM_RATING_QUERY);
 
@@ -144,9 +150,16 @@ public class LetterboxDService {
                     .mapToObj(createFilmRating(username, filmRatings, filmNames))
                     .collect(Collectors.toList());
         } catch (IOException e) {
-            log.error("User ratings can not load. User: {}", username);
+            log.error("User ratings can not load. User: {} and url : {}", username, url);
             return Collections.emptyList();
         }
+    }
+
+    private Function<Pair<String, Integer>, List<LetterBoxDRating>> getRatedFilmPerPage() {
+        return p -> {
+            log.info("getRatedFilmPerPage method invoking pageNumber: {} and username: {}", p.getSecond(), p.getFirst());
+            return getLetterBoxDRatings(LetterboxDUtils.filmRatingsUrlSetPageNumber(p.getFirst(), p.getSecond()), p.getFirst());
+        };
     }
 
     private IntFunction<LetterBoxDRating> createFilmRating(String username, List<String> filmRatings, List<String> filmNames) {

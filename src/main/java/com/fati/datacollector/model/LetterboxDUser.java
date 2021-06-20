@@ -1,4 +1,4 @@
-package com.fati.datacollector.models;
+package com.fati.datacollector.model;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -12,7 +12,7 @@ import java.io.Serializable;
 
 /**
  * author @ fati
- * created @ 27.05.2021
+ * created @ 6.05.2021
  */
 
 @Table
@@ -20,11 +20,9 @@ import java.io.Serializable;
 @Setter
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class LetterBoxDRating implements Serializable {
-    private static final long serialVersionUID = 2008521968287524388L;
+public class LetterboxDUser implements Serializable {
+    private static final long serialVersionUID = -8567732518750444103L;
 
-    @PrimaryKey String id;
-    String username;
-    String film;
-    Float rating;
+    @PrimaryKey String username;
+    String twitterUsername;
 }

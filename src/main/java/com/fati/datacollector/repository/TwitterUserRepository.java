@@ -1,6 +1,6 @@
 package com.fati.datacollector.repository;
 
-import com.fati.datacollector.models.TwitterUser;
+import com.fati.datacollector.model.TwitterUser;
 import org.springframework.data.cassandra.repository.CassandraRepository;
 
 /**

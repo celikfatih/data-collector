@@ -13,7 +13,7 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 
 @Configuration
 @EnableScheduling
-public class SchedulingConfiguration implements SchedulingConfigurer {
+public class SchedulerConfiguration implements SchedulingConfigurer {
 
     public static final int POOL_SIZE = 10;
     public static final String TASK_SCHEDULER_PREFIX = "task-scheduler";

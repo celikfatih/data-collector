@@ -5,10 +5,7 @@ import org.jsoup.nodes.Element;
 import java.util.function.IntFunction;
 import java.util.function.UnaryOperator;
 
-import static com.fati.datacollector.constants.Constants.HREF;
-import static com.fati.datacollector.constants.Constants.LETTERBOX_D_POPULAR_MEMBERS_BASE_URL;
-import static com.fati.datacollector.constants.Constants.PAGE;
-import static com.fati.datacollector.constants.Constants.TABLE_USERNAME_QUERY;
+import static com.fati.datacollector.constants.Constants.*;
 
 /**
  * author @ fati
@@ -30,5 +27,10 @@ public class LetterboxDUtils {
     public static String popularMembersUrlSetPageNumber(int pageNumber) {
         return pageNumber == 0 ? LETTERBOX_D_POPULAR_MEMBERS_BASE_URL
                 : LETTERBOX_D_POPULAR_MEMBERS_BASE_URL + PAGE + pageNumber;
+    }
+
+    public static String filmRatingsUrlSetPageNumber(String username, int pageNumber) {
+        return pageNumber == 0 ? LETTERBOX_D_BASE_URL + username + LETTERBOX_D_USER_FILM_RATINGS_URL
+                : LETTERBOX_D_BASE_URL + username + LETTERBOX_D_USER_FILM_RATINGS_URL + PAGE + pageNumber;
     }
 }

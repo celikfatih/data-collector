@@ -1,6 +1,5 @@
 package com.fati.datacollector.configuration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,16 +32,12 @@ public class TwitterConfiguration {
         return new TwitterFactory(
                 new ConfigurationBuilder()
                         .setDebugEnabled(true)
+                        .setJSONStoreEnabled(true)
                         .setOAuthConsumerSecret(consumerSecret)
                         .setOAuthConsumerKey(consumerKey)
                         .setOAuthAccessToken(accessToken)
                         .setOAuthAccessTokenSecret(accessTokenSecret)
                         .build())
                 .getInstance();
-    }
-
-    @Bean
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper();
     }
 }

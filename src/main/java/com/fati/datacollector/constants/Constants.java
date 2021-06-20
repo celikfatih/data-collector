@@ -18,9 +18,10 @@ public class Constants {
     public static final int PAGE_RESULT_SIZE = 30;
     public static final String TABLE_USERNAME_QUERY = "td > div.person-summary > a";
     public static final String TABLE_SELECT_QUERY = "table > tbody";
-    public static final int TWITTER_MAX_PAGE_SIZE = 2;
-    public static final int TWITTER_PER_PAGE_TWEET_COUNT = 5;
+    public static final int TWITTER_MAX_PAGE_SIZE = 60;
+    public static final int TWITTER_PER_PAGE_TWEET_COUNT = 50;
     public static final String LETTERBOX_D_USER_FILM_RATINGS_URL = "/films/ratings/";
     public static final String RATED_FILM_NAME_QUERY = "ul.poster-list > li > div > img";
     public static final String RATED_FILM_RATING_QUERY = "ul.poster-list > li > p";
+    public static final int LETTERBOX_D_RATING_PAGE_SIZE = 100;
 }

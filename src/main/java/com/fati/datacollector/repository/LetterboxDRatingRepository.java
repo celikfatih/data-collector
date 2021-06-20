@@ -1,6 +1,6 @@
 package com.fati.datacollector.repository;
 
-import com.fati.datacollector.models.LetterBoxDRating;
+import com.fati.datacollector.model.LetterBoxDRating;
 import org.springframework.data.cassandra.repository.CassandraRepository;
 
 /**
